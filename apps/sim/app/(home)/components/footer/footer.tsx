@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { FooterCTA } from '@/app/(home)/components/footer/footer-cta'
+import { getBrandConfig } from '@/ee/whitelabeling/branding'
 
 const LINK_CLASS =
   'text-sm text-[var(--landing-text-muted)] transition-colors hover:text-[var(--landing-text)]'
@@ -113,6 +114,8 @@ interface FooterProps {
 }
 
 export default function Footer({ hideCTA }: FooterProps) {
+  const brand = getBrandConfig()
+
   return (
     <footer
       role='contentinfo'
@@ -126,14 +129,25 @@ export default function Footer({ hideCTA }: FooterProps) {
             className='relative z-[1] grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-7'
           >
             <div className='col-span-2 flex flex-col gap-6 sm:col-span-1'>
-              <Link href='/' aria-label='Sim home'>
-                <Image
-                  src='/logo/sim-landing.svg'
-                  alt='Sim'
-                  width={85}
-                  height={26}
-                  className='h-[26.4px] w-auto'
-                />
+              <Link href='/' aria-label={`${brand.name} home`}>
+                {brand.logoUrl ? (
+                  <Image
+                    src={brand.logoUrl}
+                    alt={brand.name}
+                    width={28}
+                    height={28}
+                    className='h-[28px] w-[28px] object-contain'
+                    unoptimized
+                  />
+                ) : (
+                  <Image
+                    src='/logo/garza-os-logo.png'
+                    alt={brand.name}
+                    width={28}
+                    height={28}
+                    className='h-[28px] w-[28px]'
+                  />
+                )}
               </Link>
             </div>
 

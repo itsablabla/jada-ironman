@@ -31,9 +31,7 @@ import {
   Plus,
   Search,
   Settings,
-  Sim,
   Table,
-  Wordmark,
 } from '@/components/emcn/icons'
 import { useSession } from '@/lib/auth/auth-client'
 import { cn } from '@/lib/core/utils/cn'
@@ -1219,7 +1217,13 @@ export const Sidebar = memo(function Sidebar() {
                         unoptimized
                       />
                     ) : (
-                      <Wordmark className='h-[16px] w-auto text-[var(--text-body)]' />
+                      <Image
+                        src='/logo/garza-os-logo.png'
+                        alt={brand.name}
+                        width={16}
+                        height={16}
+                        className='h-[16px] w-[16px] flex-shrink-0 object-contain'
+                      />
                     )}
                   </Link>
                   <SidebarTooltip label='Expand sidebar' enabled={showCollapsedTooltips}>
@@ -1240,7 +1244,13 @@ export const Sidebar = memo(function Sidebar() {
                           unoptimized
                         />
                       ) : (
-                        <Sim className='h-[16px] w-[16px] flex-shrink-0 group-hover:hidden' />
+                        <Image
+                          src='/logo/garza-os-logo.png'
+                          alt=''
+                          width={16}
+                          height={16}
+                          className='h-[16px] w-[16px] flex-shrink-0 object-contain group-hover:hidden'
+                        />
                       )}
                       <PanelLeft className='hidden h-[16px] w-[16px] rotate-180 text-[var(--text-icon)] group-hover:block' />
                     </Link>

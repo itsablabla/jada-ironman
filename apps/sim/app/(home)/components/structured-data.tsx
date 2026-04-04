@@ -1,3 +1,6 @@
+import { getBrandConfig } from '@/ee/whitelabeling/branding'
+import { getBaseUrl } from '@/lib/core/utils/urls'
+
 /**
  * JSON-LD structured data for the landing page.
  *
@@ -18,27 +21,30 @@
  * - Do not add `aggregateRating` without real, verifiable review data.
  */
 export default function StructuredData() {
+  const baseUrl = getBaseUrl()
+  const brand = getBrandConfig()
+  const brandName = brand.name
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': 'https://sim.ai/#organization',
-        name: 'Sim',
-        alternateName: 'Sim Studio',
-        description:
-          'Sim is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows.',
-        url: 'https://sim.ai',
+        '@id': `${baseUrl}/#organization`,
+        name: brandName,
+        alternateName: `${brandName} Studio`,
+        description: `${brandName} is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows.`,
+        url: baseUrl,
         logo: {
           '@type': 'ImageObject',
-          '@id': 'https://sim.ai/#logo',
-          url: 'https://sim.ai/logo/b%26w/text/b%26w.svg',
-          contentUrl: 'https://sim.ai/logo/b%26w/text/b%26w.svg',
-          width: 49.78314,
-          height: 24.276,
-          caption: 'Sim Logo',
+          '@id': `${baseUrl}/#logo`,
+          url: brand.logoUrl || `${baseUrl}/logo/garza-os-logo.png`,
+          contentUrl: brand.logoUrl || `${baseUrl}/logo/garza-os-logo.png`,
+          width: 634,
+          height: 636,
+          caption: `${brandName} Logo`,
         },
-        image: { '@id': 'https://sim.ai/#logo' },
+        image: { '@id': `${baseUrl}/#logo` },
         sameAs: [
           'https://x.com/simdotai',
           'https://github.com/simstudioai/sim',
@@ -53,47 +59,44 @@ export default function StructuredData() {
       },
       {
         '@type': 'WebSite',
-        '@id': 'https://sim.ai/#website',
-        url: 'https://sim.ai',
-        name: 'Sim — Build AI Agents & Run Your Agentic Workforce',
-        description:
-          'Sim is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Join 100,000+ builders.',
-        publisher: { '@id': 'https://sim.ai/#organization' },
+        '@id': `${baseUrl}/#website`,
+        url: baseUrl,
+        name: `${brandName} — Build AI Agents & Run Your Agentic Workforce`,
+        description: `${brandName} is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows.`,
+        publisher: { '@id': `${baseUrl}/#organization` },
         inLanguage: 'en-US',
       },
       {
         '@type': 'WebPage',
-        '@id': 'https://sim.ai/#webpage',
-        url: 'https://sim.ai',
-        name: 'Sim — Build AI Agents & Run Your Agentic Workforce',
-        isPartOf: { '@id': 'https://sim.ai/#website' },
-        about: { '@id': 'https://sim.ai/#software' },
+        '@id': `${baseUrl}/#webpage`,
+        url: baseUrl,
+        name: `${brandName} — Build AI Agents & Run Your Agentic Workforce`,
+        isPartOf: { '@id': `${baseUrl}/#website` },
+        about: { '@id': `${baseUrl}/#software` },
         datePublished: '2024-01-01T00:00:00+00:00',
         dateModified: new Date().toISOString(),
-        description:
-          'Sim is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs.',
-        breadcrumb: { '@id': 'https://sim.ai/#breadcrumb' },
+        description: `${brandName} is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs.`,
+        breadcrumb: { '@id': `${baseUrl}/#breadcrumb` },
         inLanguage: 'en-US',
         speakable: {
           '@type': 'SpeakableSpecification',
           cssSelector: ['#hero-heading', '[id="hero"] p'],
         },
-        potentialAction: [{ '@type': 'ReadAction', target: ['https://sim.ai'] }],
+        potentialAction: [{ '@type': 'ReadAction', target: [baseUrl] }],
       },
       {
         '@type': 'BreadcrumbList',
-        '@id': 'https://sim.ai/#breadcrumb',
+        '@id': `${baseUrl}/#breadcrumb`,
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sim.ai' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl },
         ],
       },
       {
         '@type': 'WebApplication',
-        '@id': 'https://sim.ai/#software',
-        url: 'https://sim.ai',
-        name: 'Sim — Build AI Agents & Run Your Agentic Workforce',
-        description:
-          'Sim is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs. Trusted by over 100,000 builders. SOC2 and HIPAA compliant.',
+        '@id': `${baseUrl}/#software`,
+        url: baseUrl,
+        name: `${brandName} — Build AI Agents & Run Your Agentic Workforce`,
+        description: `${brandName} is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs.`,
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Web',
         browserRequirements: 'Requires a modern browser with JavaScript enabled',
@@ -172,46 +175,46 @@ export default function StructuredData() {
       },
       {
         '@type': 'FAQPage',
-        '@id': 'https://sim.ai/#faq',
+        '@id': `${baseUrl}/#faq`,
         mainEntity: [
           {
             '@type': 'Question',
-            name: 'What is Sim?',
+            name: `What is ${brandName}?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Sim is the open-source platform to build AI agents and run your agentic workforce. Teams connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs. Trusted by over 100,000 builders. SOC2 and HIPAA compliant.',
+              text: `${brandName} is the open-source platform to build AI agents and run your agentic workforce. Teams connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs.`,
             },
           },
           {
             '@type': 'Question',
-            name: 'Which AI models does Sim support?',
+            name: `Which AI models does ${brandName} support?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Sim supports all major AI models including OpenAI (GPT-5, GPT-4o), Anthropic (Claude), Google (Gemini), xAI (Grok), Mistral, Perplexity, and many more. You can also connect to open-source models via Ollama.',
+              text: `${brandName} supports all major AI models including OpenAI (GPT-5, GPT-4o), Anthropic (Claude), Google (Gemini), xAI (Grok), Mistral, Perplexity, and many more. You can also connect to open-source models via Ollama.`,
             },
           },
           {
             '@type': 'Question',
-            name: 'How much does Sim cost?',
+            name: `How much does ${brandName} cost?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Sim offers a free Community plan with 1,000 credits to start, a Pro plan at $25/month with 6,000 credits, a Max plan at $100/month with 25,000 credits, team plans available for both tiers, and custom Enterprise pricing. All plans include CLI/SDK access.',
+              text: `${brandName} offers a free Community plan with 1,000 credits to start, a Pro plan at $25/month with 6,000 credits, a Max plan at $100/month with 25,000 credits, team plans available for both tiers, and custom Enterprise pricing. All plans include CLI/SDK access.`,
             },
           },
           {
             '@type': 'Question',
-            name: 'Do I need coding skills to use Sim?',
+            name: `Do I need coding skills to use ${brandName}?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'No coding skills are required. Sim provides a visual interface for building AI agents and agentic workflows. Developers can also use custom functions, the API, and the CLI/SDK for advanced use cases.',
+              text: `No coding skills are required. ${brandName} provides a visual interface for building AI agents and agentic workflows. Developers can also use custom functions, the API, and the CLI/SDK for advanced use cases.`,
             },
           },
           {
             '@type': 'Question',
-            name: 'What enterprise features does Sim offer?',
+            name: `What enterprise features does ${brandName} offer?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Sim offers SOC2 and HIPAA compliance, SSO/SAML authentication, role-based access control, audit logs, dedicated support, custom SLAs, and on-premise deployment options for enterprise customers.',
+              text: `${brandName} offers SOC2 and HIPAA compliance, SSO/SAML authentication, role-based access control, audit logs, dedicated support, custom SLAs, and on-premise deployment options for enterprise customers.`,
             },
           },
         ],

@@ -4,11 +4,11 @@ import type { BrandConfig } from './types'
  * Default brand configuration values
  */
 export const defaultBrandConfig: BrandConfig = {
-  name: 'Sim',
+  name: 'Garza OS',
   logoUrl: undefined,
   faviconUrl: undefined,
   customCssUrl: undefined,
-  supportEmail: 'help@sim.ai',
+  supportEmail: 'help@garza-os.com',
   documentationUrl: undefined,
   termsUrl: undefined,
   privacyUrl: undefined,

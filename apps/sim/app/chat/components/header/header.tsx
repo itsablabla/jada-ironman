@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { GithubIcon } from '@/components/icons'
 import { useBrandConfig } from '@/ee/whitelabeling'
+import { getBaseUrl } from '@/lib/core/utils/urls'
 
 interface ChatHeaderProps {
   chatConfig: {
@@ -58,20 +59,20 @@ export function ChatHeader({ chatConfig, starCount }: ChatHeaderProps) {
             <GithubIcon className='h-[16px] w-[16px]' aria-hidden='true' />
             <span aria-live='polite'>{starCount}</span>
           </a>
-          {/* Only show Sim logo if no custom branding is set */}
+          {/* Only show default logo if no custom branding is set */}
 
           <Link
-            href='https://sim.ai'
+            href={getBaseUrl()}
             target='_blank'
             rel='noopener noreferrer'
-            aria-label='Sim home'
+            aria-label={`${brand.name} home`}
           >
             <Image
-              src='/logo/sim-landing.svg'
-              alt='Sim'
-              width={71}
-              height={22}
-              className='h-[22px] w-auto'
+              src='/logo/garza-os-logo.png'
+              alt={brand.name}
+              width={24}
+              height={24}
+              className='h-[24px] w-[24px]'
               priority
             />
           </Link>

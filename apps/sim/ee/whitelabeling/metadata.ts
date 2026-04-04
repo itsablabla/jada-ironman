@@ -9,8 +9,8 @@ export function generateBrandedMetadata(override: Partial<Metadata> = {}): Metad
   const brand = getBrandConfig()
 
   const defaultTitle = brand.name
-  const summaryFull = `Sim is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs. Trusted by over 100,000 builders — from startups to Fortune 500 companies. SOC2 and HIPAA compliant.`
-  const summaryShort = `Sim is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows.`
+  const summaryFull = `${brand.name} is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs.`
+  const summaryShort = `${brand.name} is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows.`
 
   return {
     title: {
@@ -127,12 +127,14 @@ export function generateBrandedMetadata(override: Partial<Metadata> = {}): Metad
  * Generate static structured data for SEO
  */
 export function generateStructuredData() {
+  const brand = getBrandConfig()
+
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Sim',
+    name: brand.name,
     description:
-      'Sim is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs. Trusted by over 100,000 builders. SOC2 and HIPAA compliant.',
+      `${brand.name} is the open-source platform to build AI agents and run your agentic workforce. Connect 1,000+ integrations and LLMs to deploy and orchestrate agentic workflows. Create agents, workflows, knowledge bases, tables, and docs.`,
     url: getBaseUrl(),
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
@@ -145,8 +147,8 @@ export function generateStructuredData() {
     },
     creator: {
       '@type': 'Organization',
-      name: 'Sim',
-      url: 'https://sim.ai',
+      name: brand.name,
+      url: getBaseUrl(),
     },
     featureList: [
       'AI Agent Creation',

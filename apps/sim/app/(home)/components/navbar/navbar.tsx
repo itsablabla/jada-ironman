@@ -116,11 +116,11 @@ export default function Navbar({ logoOnly = false, blogPosts = [] }: NavbarProps
           />
         ) : (
           <Image
-            src='/logo/sim-landing.svg'
-            alt='Sim'
-            width={71}
-            height={22}
-            className='h-[22px] w-auto'
+            src='/logo/garza-os-logo.png'
+            alt={brand.name}
+            width={28}
+            height={28}
+            className='h-[28px] w-[28px]'
             priority
           />
         )}

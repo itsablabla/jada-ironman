@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button, Library } from '@/components/emcn'
 import { AgentIcon } from '@/components/icons'
 import { cn } from '@/lib/core/utils/cn'
+import { useBrandConfig } from '@/ee/whitelabeling'
 import { usePreventZoom } from '@/app/workspace/[workspaceId]/w/[workflowId]/hooks'
 import { useSearchModalStore } from '@/stores/modals/search/store'
 
@@ -58,6 +59,7 @@ const commands: CommandItem[] = [
 export function CommandList() {
   const params = useParams()
   const router = useRouter()
+  const brand = useBrandConfig()
   const openSearchModal = useSearchModalStore((s) => s.open)
   const preventZoomRef = usePreventZoom()
 
@@ -186,17 +188,24 @@ export function CommandList() {
       >
         {/* Logo */}
         <div className='mb-5 flex justify-center'>
-          <Image
-            src='/logo/b&w/text/b&w.svg'
-            alt='Sim'
-            width={99.56}
-            height={48.56}
-            className='opacity-70'
-            style={{
-              filter:
-                'brightness(0) saturate(100%) invert(69%) sepia(0%) saturate(0%) hue-rotate(202deg) brightness(94%) contrast(89%)',
-            }}
-          />
+          {brand.logoUrl ? (
+            <Image
+              src={brand.logoUrl}
+              alt={brand.name}
+              width={48}
+              height={48}
+              className='opacity-70 object-contain'
+              unoptimized
+            />
+          ) : (
+            <Image
+              src='/logo/garza-os-logo.png'
+              alt={brand.name}
+              width={48}
+              height={48}
+              className='opacity-70'
+            />
+          )}
         </div>
 
         {commands.map((command) => {

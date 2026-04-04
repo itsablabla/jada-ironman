@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { getCourse } from '@/lib/academy/content'
 import { markLessonComplete } from '@/lib/academy/local-progress'
 import type { Lesson } from '@/lib/academy/types'
+import { useBrandConfig } from '@/ee/whitelabeling'
 import { LessonVideo } from '@/app/academy/components/lesson-video'
 import { ExerciseView } from './components/exercise-view'
 import { LessonQuiz } from './components/lesson-quiz'
@@ -20,6 +21,7 @@ interface LessonPageProps {
 
 export default function LessonPage({ params }: LessonPageProps) {
   const { courseSlug, lessonSlug } = use(params)
+  const brand = useBrandConfig()
   const course = getCourse(courseSlug)
   const [exerciseComplete, setExerciseComplete] = useState(false)
   const [quizComplete, setQuizComplete] = useState(false)
@@ -77,14 +79,25 @@ export default function LessonPage({ params }: LessonPageProps) {
     <div className='fixed inset-0 flex flex-col overflow-hidden bg-[#1C1C1C]'>
       <header className='flex h-[52px] flex-shrink-0 items-center justify-between border-[#2A2A2A] border-b bg-[#1C1C1C] px-5'>
         <div className='flex items-center gap-3 text-[13px]'>
-          <Link href='/' aria-label='Sim home'>
-            <Image
-              src='/logo/b&w/text/b&w.svg'
-              alt='Sim'
-              width={40}
-              height={14}
-              className='opacity-70 invert transition-opacity hover:opacity-100'
-            />
+          <Link href='/' aria-label={`${brand.name} home`}>
+            {brand.logoUrl ? (
+              <Image
+                src={brand.logoUrl}
+                alt={brand.name}
+                width={22}
+                height={22}
+                className='opacity-70 transition-opacity hover:opacity-100 object-contain'
+                unoptimized
+              />
+            ) : (
+              <Image
+                src='/logo/garza-os-logo.png'
+                alt={brand.name}
+                width={22}
+                height={22}
+                className='opacity-70 transition-opacity hover:opacity-100'
+              />
+            )}
           </Link>
           <span className='text-[#333]'>/</span>
           <Link href='/academy' className='text-[#666] transition-colors hover:text-[#999]'>
