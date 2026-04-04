@@ -13,7 +13,7 @@ const SCOPE_DESCRIPTIONS: Record<string, string> = {
   profile: 'Access your basic profile information',
   email: 'View your email address',
   offline_access: 'Maintain access when you are not actively using the app',
-  'mcp:tools': 'Use Sim workflows and tools on your behalf',
+  'mcp:tools': 'Use Garza OS workflows and tools on your behalf',
 } as const
 
 interface ClientInfo {
@@ -179,7 +179,7 @@ export default function OAuthConsentPage() {
         <ArrowLeftRight className='h-5 w-5 text-[var(--landing-text-muted)]' />
         <Image
           src='/new/logo/colorized-bg.svg'
-          alt='Sim'
+          alt='Garza OS'
           width={48}
           height={48}
           className='rounded-[10px]'

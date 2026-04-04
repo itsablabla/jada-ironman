@@ -1,10 +1,4 @@
-'use client'
-
-import Image from 'next/image'
-import { useBrandConfig } from '@/ee/whitelabeling'
-
 export function PoweredBySim() {
-  const brandConfig = useBrandConfig()
 
   return (
     <div
@@ -13,19 +7,13 @@ export function PoweredBySim() {
       }
     >
       <a
-        href='https://sim.ai'
+        href='https://auto2.garza-os.com'
         target='_blank'
         rel='noopener noreferrer'
         className='inline-flex items-center gap-1.5 transition hover:opacity-80'
       >
         <span>Powered by</span>
-        <Image
-          src='/logo/b&w/text/small.png'
-          alt='Sim'
-          width={30}
-          height={15}
-          className='h-[14px] w-auto'
-        />
+        <span className='font-semibold text-[14px]'>Garza OS</span>
       </a>
     </div>
   )

@@ -9,7 +9,7 @@ export default async function IntegrationsLayout({ children }: { children: React
   const orgJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Sim',
+    name: 'Garza OS',
     url,
     logo: `${url}/logo/primary/small.png`,
     sameAs: ['https://x.com/simdotai'],
@@ -18,7 +18,7 @@ export default async function IntegrationsLayout({ children }: { children: React
   const websiteJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Sim',
+    name: 'Garza OS',
     url,
     potentialAction: {
       '@type': 'SearchAction',

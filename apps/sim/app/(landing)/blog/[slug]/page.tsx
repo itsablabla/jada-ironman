@@ -164,7 +164,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </div>
         </div>
       )}
-      <meta itemProp='publisher' content='Sim' />
+      <meta itemProp='publisher' content='Garza OS' />
       <meta itemProp='inLanguage' content='en-US' />
       <meta itemProp='keywords' content={post.tags.join(', ')} />
     </article>
