@@ -12,6 +12,7 @@ import { ollamaProvider } from '@/providers/ollama'
 import { openaiProvider } from '@/providers/openai'
 import { openRouterProvider } from '@/providers/openrouter'
 import type { ProviderConfig, ProviderId } from '@/providers/types'
+import { isProviderBlacklisted } from '@/providers/utils'
 import { vertexProvider } from '@/providers/vertex'
 import { vllmProvider } from '@/providers/vllm'
 import { xAIProvider } from '@/providers/xai'
@@ -39,6 +40,10 @@ const providerRegistry: Record<ProviderId, ProviderConfig> = {
 export async function getProviderExecutor(
   providerId: ProviderId
 ): Promise<ProviderConfig | undefined> {
+  if (isProviderBlacklisted(providerId)) {
+    logger.warn(`Attempted to use blacklisted provider: ${providerId}`)
+    return undefined
+  }
   const provider = providerRegistry[providerId]
   if (!provider) {
     logger.error(`Provider not found: ${providerId}`)
@@ -49,6 +54,10 @@ export async function getProviderExecutor(
 
 export async function initializeProviders(): Promise<void> {
   for (const [id, provider] of Object.entries(providerRegistry)) {
+    if (isProviderBlacklisted(id)) {
+      logger.info(`Skipping initialization of blacklisted provider: ${id}`)
+      continue
+    }
     if (provider.initialize) {
       try {
         await provider.initialize()
