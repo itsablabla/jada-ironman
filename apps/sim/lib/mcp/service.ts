@@ -183,8 +183,8 @@ class McpService {
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
-        logger.info(
-          `[${requestId}] Executing MCP tool ${toolCall.name} on server ${serverId} for user ${userId}${attempt > 0 ? ` (attempt ${attempt + 1})` : ''}`
+        logger.debug(
+          `[${requestId}] Executing MCP tool ${toolCall.name} on server ${serverId}${attempt > 0 ? ` (attempt ${attempt + 1})` : ''}`
         )
 
         const config = await this.getServerConfig(serverId, workspaceId)
@@ -200,7 +200,7 @@ class McpService {
 
         try {
           const result = await client.callTool(toolCall)
-          logger.info(`[${requestId}] Successfully executed tool ${toolCall.name}`)
+          logger.debug(`[${requestId}] Successfully executed tool ${toolCall.name}`)
           return result
         } finally {
           await client.disconnect()
@@ -334,7 +334,7 @@ class McpService {
         }
       }
 
-      logger.info(`[${requestId}] Discovering MCP tools for workspace ${workspaceId}`)
+      logger.debug(`[${requestId}] Discovering MCP tools for workspace ${workspaceId}`)
 
       const servers = await this.getWorkspaceServers(workspaceId)
 
@@ -351,7 +351,7 @@ class McpService {
           try {
             const tools = await client.listTools()
             logger.debug(
-              `[${requestId}] Discovered ${tools.length} tools from server ${config.name}`
+              `[${requestId}] Discovered ${tools.length} tools from server ${config.name} (${config.id})`
             )
             return { serverId: config.id, tools, resolvedConfig }
           } finally {
@@ -440,8 +440,8 @@ class McpService {
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
-        logger.info(
-          `[${requestId}] Discovering tools from server ${serverId} for user ${userId}${attempt > 0 ? ` (attempt ${attempt + 1})` : ''}`
+        logger.debug(
+          `[${requestId}] Discovering tools from server ${serverId}${attempt > 0 ? ` (attempt ${attempt + 1})` : ''}`
         )
 
         const config = await this.getServerConfig(serverId, workspaceId)
@@ -454,7 +454,7 @@ class McpService {
 
         try {
           const tools = await client.listTools()
-          logger.info(`[${requestId}] Discovered ${tools.length} tools from server ${config.name}`)
+          logger.debug(`[${requestId}] Discovered ${tools.length} tools from server ${config.name}`)
           return tools
         } finally {
           await client.disconnect()

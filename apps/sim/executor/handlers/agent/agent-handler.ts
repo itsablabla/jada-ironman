@@ -475,21 +475,24 @@ export class AgentBlockHandler implements BlockHandler {
       ...(ctx.userId ? { userId: ctx.userId } : {}),
     })
 
-    const maxAttempts = 2
+    const maxAttempts = 3
+    const BASE_RETRY_DELAY_MS = 500
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         const response = await fetch(url.toString(), { method: 'GET', headers })
 
         if (!response.ok) {
           const errorText = await response.text()
-          if (this.isRetryableError(errorText) && attempt < maxAttempts - 1) {
+          const statusMsg = `${response.status} ${errorText}`
+          if (this.isRetryableError(statusMsg) && attempt < maxAttempts - 1) {
+            const delay = BASE_RETRY_DELAY_MS * 2 ** attempt
             logger.warn(
-              `[AgentHandler] Session error discovering tools from ${serverId}, retrying (attempt ${attempt + 1})`
+              `[AgentHandler] Transient error discovering tools from ${serverId} (attempt ${attempt + 1}/${maxAttempts}), retrying in ${delay}ms: ${response.status}`
             )
-            await new Promise((r) => setTimeout(r, 100))
+            await new Promise((r) => setTimeout(r, delay))
             continue
           }
-          throw new Error(`Failed to discover tools: ${response.status} ${errorText}`)
+          throw new Error(`Failed to discover tools: ${statusMsg}`)
         }
 
         const data = await response.json()
@@ -501,11 +504,11 @@ export class AgentBlockHandler implements BlockHandler {
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error)
         if (this.isRetryableError(errorMsg) && attempt < maxAttempts - 1) {
+          const delay = BASE_RETRY_DELAY_MS * 2 ** attempt
           logger.warn(
-            `[AgentHandler] Retryable error discovering tools from ${serverId} (attempt ${attempt + 1}):`,
-            error
+            `[AgentHandler] Retryable error discovering tools from ${serverId} (attempt ${attempt + 1}/${maxAttempts}), retrying in ${delay}ms`
           )
-          await new Promise((r) => setTimeout(r, 100))
+          await new Promise((r) => setTimeout(r, delay))
           continue
         }
         throw error
@@ -519,7 +522,21 @@ export class AgentBlockHandler implements BlockHandler {
 
   private isRetryableError(errorMsg: string): boolean {
     const lowerMsg = errorMsg.toLowerCase()
-    return lowerMsg.includes('session') || lowerMsg.includes('400') || lowerMsg.includes('404')
+    return (
+      lowerMsg.includes('session') ||
+      lowerMsg.includes('400') ||
+      lowerMsg.includes('404') ||
+      lowerMsg.includes('502') ||
+      lowerMsg.includes('503') ||
+      lowerMsg.includes('504') ||
+      lowerMsg.includes('bad gateway') ||
+      lowerMsg.includes('service unavailable') ||
+      lowerMsg.includes('gateway timeout') ||
+      lowerMsg.includes('econnrefused') ||
+      lowerMsg.includes('econnreset') ||
+      lowerMsg.includes('etimedout') ||
+      lowerMsg.includes('network')
+    )
   }
 
   private async createMcpToolFromDiscoveredData(

@@ -110,7 +110,7 @@ export class McpClient {
    * for `notifications/tools/list_changed` after connecting.
    */
   async connect(): Promise<void> {
-    logger.info(`Connecting to MCP server: ${this.config.name} (${this.config.transport})`)
+    logger.debug(`Connecting to MCP server: ${this.config.name} (${this.config.transport})`)
 
     try {
       await this.client.connect(this.transport)
@@ -129,14 +129,16 @@ export class McpClient {
       }
 
       const serverVersion = this.client.getServerVersion()
-      logger.info(`Successfully connected to MCP server: ${this.config.name}`, {
+      logger.debug(`Successfully connected to MCP server: ${this.config.name}`, {
         protocolVersion: serverVersion,
       })
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       this.connectionStatus.lastError = errorMessage
       this.isConnected = false
-      logger.error(`Failed to connect to MCP server ${this.config.name}:`, error)
+      // Log at WARN level — connection failures are often transient (502, restart, etc.)
+      // and the caller's retry logic will handle recovery.
+      logger.warn(`Failed to connect to MCP server ${this.config.name}: ${errorMessage}`)
       throw new McpConnectionError(errorMessage, this.config.name)
     }
   }
@@ -145,7 +147,7 @@ export class McpClient {
    * Disconnect from MCP server
    */
   async disconnect(): Promise<void> {
-    logger.info(`Disconnecting from MCP server: ${this.config.name}`)
+    logger.debug(`Disconnecting from MCP server: ${this.config.name}`)
 
     try {
       await this.client.close()
@@ -155,7 +157,7 @@ export class McpClient {
 
     this.isConnected = false
     this.connectionStatus.connected = false
-    logger.info(`Disconnected from MCP server: ${this.config.name}`)
+    logger.debug(`Disconnected from MCP server: ${this.config.name}`)
   }
 
   /**

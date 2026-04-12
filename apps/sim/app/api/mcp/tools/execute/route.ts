@@ -45,15 +45,9 @@ export const POST = withMcpAuth('read')(
     try {
       const body = getParsedBody(request) || (await request.json())
 
-      logger.info(`[${requestId}] MCP tool execution request received`, {
-        hasAuthHeader: !!request.headers.get('authorization'),
-        authHeaderType: request.headers.get('authorization')?.substring(0, 10),
-        bodyKeys: Object.keys(body),
+      logger.debug(`[${requestId}] MCP tool execution request received`, {
         serverId: body.serverId,
         toolName: body.toolName,
-        hasWorkflowId: !!body.workflowId,
-        workflowId: body.workflowId,
-        userId: userId,
       })
 
       const { serverId, toolName, arguments: rawArgs } = body
@@ -71,8 +65,8 @@ export const POST = withMcpAuth('read')(
         return createMcpErrorResponse(new Error(toolNameValidation.error), 'Invalid toolName', 400)
       }
 
-      logger.info(
-        `[${requestId}] Executing tool ${toolName} on server ${serverId} for user ${userId} in workspace ${workspaceId}`
+      logger.debug(
+        `[${requestId}] Executing tool ${toolName} on server ${serverId}`
       )
 
       let tool: McpTool | null = null
@@ -203,7 +197,7 @@ export const POST = withMcpAuth('read')(
           400
         )
       }
-      logger.info(`[${requestId}] Successfully executed tool ${toolName} on server ${serverId}`)
+      logger.debug(`[${requestId}] Successfully executed tool ${toolName} on server ${serverId}`)
 
       try {
         const { PlatformEvents } = await import('@/lib/core/telemetry')

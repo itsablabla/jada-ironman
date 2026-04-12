@@ -81,7 +81,7 @@ export class McpConnectionManager {
     const serverId = config.id
 
     if (this.connections.has(serverId) || this.connectingServers.has(serverId)) {
-      logger.info(`[${config.name}] Already has a managed connection or is connecting, skipping`)
+      logger.debug(`[${config.name}] Already has a managed connection or is connecting, skipping`)
       const state = this.states.get(serverId)
       return { supportsListChanged: state?.supportsListChanged ?? false }
     }
@@ -118,7 +118,7 @@ export class McpConnectionManager {
       const supportsListChanged = client.hasListChangedCapability()
 
       if (!supportsListChanged) {
-        logger.info(
+        logger.debug(
           `[${config.name}] Server does not support listChanged — disconnecting (fallback to cache)`
         )
         await client.disconnect()
@@ -145,7 +145,7 @@ export class McpConnectionManager {
 
       this.ensureIdleCheck()
 
-      logger.info(`[${config.name}] Persistent connection established (listChanged supported)`)
+      logger.debug(`[${config.name}] Persistent connection established (listChanged supported)`)
       return { supportsListChanged: true }
     } finally {
       this.connectingServers.delete(serverId)
@@ -169,7 +169,7 @@ export class McpConnectionManager {
     }
 
     this.states.delete(serverId)
-    logger.info(`Managed connection removed: ${serverId}`)
+    logger.debug(`Managed connection removed: ${serverId}`)
   }
 
   /**
@@ -296,7 +296,7 @@ export class McpConnectionManager {
     const delay = Math.min(BASE_RECONNECT_DELAY_MS * 2 ** state.reconnectAttempts, 60_000)
     state.reconnectAttempts++
 
-    logger.info(
+    logger.debug(
       `[${config.name}] Reconnecting in ${delay}ms (attempt ${state.reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`
     )
 
@@ -322,7 +322,7 @@ export class McpConnectionManager {
       try {
         const result = await this.connect(config, userId, workspaceId)
         if (result.supportsListChanged) {
-          logger.info(`[${config.name}] Reconnected successfully`)
+          logger.debug(`[${config.name}] Reconnected successfully`)
         } else {
           this.restoreReconnectState(config, userId, workspaceId, attempts)
           this.scheduleReconnect(config, userId, workspaceId)

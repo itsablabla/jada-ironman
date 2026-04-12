@@ -56,8 +56,12 @@ const getLogLevel = (): string | undefined => {
 /**
  * Get the minimum log level from environment variable or use defaults
  * - Development: DEBUG (show all logs)
- * - Production: ERROR (only show errors, but can be overridden by LOG_LEVEL env var)
+ * - Production: WARN (warnings and errors only; override with LOG_LEVEL env var)
  * - Test: ERROR (only show errors in tests)
+ *
+ * Set LOG_LEVEL=DEBUG to enable verbose logging in production when debugging.
+ * Keep LOG_LEVEL unset or set to WARN/ERROR in production to avoid hitting
+ * Railway's 500 logs/sec rate limit.
  */
 const getMinLogLevel = (): LogLevel => {
   const logLevelEnv = getLogLevel()
@@ -70,11 +74,11 @@ const getMinLogLevel = (): LogLevel => {
     case 'development':
       return LogLevel.DEBUG
     case 'production':
-      return LogLevel.ERROR
+      return LogLevel.WARN
     case 'test':
       return LogLevel.ERROR
     default:
-      return LogLevel.DEBUG
+      return LogLevel.INFO
   }
 }
 

@@ -204,6 +204,43 @@ async function executeCode(request) {
         info: (...args) => __log(...args),
       };
 
+      // Set up base64 encoding/decoding
+      // btoa/atob are browser APIs not available in isolated-vm; provide pure-JS equivalents
+      // that work identically to the browser versions.
+      const __b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+      function btoa(str) {
+        str = String(str);
+        let result = '';
+        let i = 0;
+        while (i < str.length) {
+          const a = str.charCodeAt(i++);
+          const b = i < str.length ? str.charCodeAt(i++) : 0;
+          const c = i < str.length ? str.charCodeAt(i++) : 0;
+          result += __b64chars[a >> 2];
+          result += __b64chars[((a & 3) << 4) | (b >> 4)];
+          result += i - 2 < str.length ? __b64chars[((b & 15) << 2) | (c >> 6)] : '=';
+          result += i - 1 < str.length ? __b64chars[c & 63] : '=';
+        }
+        return result;
+      }
+      function atob(str) {
+        str = String(str).replace(/[=]+$/, '');
+        let result = '';
+        let buf = 0;
+        let bits = 0;
+        for (let i = 0; i < str.length; i++) {
+          const val = __b64chars.indexOf(str[i]);
+          if (val === -1) continue;
+          buf = (buf << 6) | val;
+          bits += 6;
+          if (bits >= 8) {
+            bits -= 8;
+            result += String.fromCharCode((buf >> bits) & 0xff);
+          }
+        }
+        return result;
+      }
+
       // Set up fetch function that uses the host's secure fetch
       async function fetch(url, options) {
         let optionsJson;
