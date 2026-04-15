@@ -84,6 +84,25 @@ export function SocialLoginButtons({
   async function signInWithNextcloud() {
     if (!nextcloudAvailable) return
 
+    // If we're inside an iframe (e.g. Nextcloud external site), break out to the
+    // top-level window first. OAuth flows require top-level navigation because
+    // Nextcloud's CSRF tokens and session cookies are blocked in third-party
+    // iframe contexts, causing "State token does not match" errors.
+    try {
+      if (window.self !== window.top) {
+        const loginUrl = new URL(window.location.href)
+        loginUrl.searchParams.set('startOAuth', 'nextcloud')
+        window.top!.location.href = loginUrl.toString()
+        return
+      }
+    } catch {
+      // Cross-origin iframe — open in new tab as fallback
+      const loginUrl = new URL(window.location.href)
+      loginUrl.searchParams.set('startOAuth', 'nextcloud')
+      window.open(loginUrl.toString(), '_blank')
+      return
+    }
+
     setIsNextcloudLoading(true)
     try {
       await client.signIn.oauth2({ providerId: 'nextcloud', callbackURL })

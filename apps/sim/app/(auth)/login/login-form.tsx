@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createLogger } from '@sim/logger'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import Link from 'next/link'
@@ -97,6 +97,16 @@ export default function LoginPage({
   }
   const callbackUrl = isValidCallbackUrl ? callbackUrlParam! : '/workspace'
   const isInviteFlow = searchParams?.get('invite_flow') === 'true'
+
+  // Auto-trigger Nextcloud OAuth when redirected from iframe breakout
+  const startOAuth = searchParams?.get('startOAuth')
+  const oauthTriggeredRef = useRef(false)
+  useEffect(() => {
+    if (startOAuth === 'nextcloud' && nextcloudAvailable && !oauthTriggeredRef.current) {
+      oauthTriggeredRef.current = true
+      client.signIn.oauth2({ providerId: 'nextcloud', callbackURL: callbackUrl })
+    }
+  }, [startOAuth, nextcloudAvailable, callbackUrl])
 
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false)
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('')
