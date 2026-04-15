@@ -6,5 +6,7 @@ export async function getOAuthProviderStatus() {
 
   const googleAvailable = !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET)
 
-  return { githubAvailable, googleAvailable, isProduction: isProd }
+  const nextcloudAvailable = !!(env.NEXTCLOUD_CLIENT_ID && env.NEXTCLOUD_CLIENT_SECRET && env.NEXTCLOUD_URL)
+
+  return { githubAvailable, googleAvailable, nextcloudAvailable, isProduction: isProd }
 }

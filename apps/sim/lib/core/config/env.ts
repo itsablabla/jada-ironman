@@ -315,6 +315,9 @@ export const env = createEnv({
     CALCOM_CLIENT_ID:                      z.string().optional(),                  // Cal.com OAuth client ID
     ATTIO_CLIENT_ID:                       z.string().optional(),                  // Attio OAuth client ID
     ATTIO_CLIENT_SECRET:                   z.string().optional(),                  // Attio OAuth client secret
+    NEXTCLOUD_CLIENT_ID:                   z.string().optional(),                  // Nextcloud OAuth client ID for SSO login
+    NEXTCLOUD_CLIENT_SECRET:               z.string().optional(),                  // Nextcloud OAuth client secret
+    NEXTCLOUD_URL:                         z.string().url().optional(),            // Nextcloud instance URL (e.g., https://next.garzaos.online)
 
     // AgentMail - Mothership Email Inbox
     AGENTMAIL_API_KEY:                     z.string().min(1).optional(),           // AgentMail API key for mothership email inbox

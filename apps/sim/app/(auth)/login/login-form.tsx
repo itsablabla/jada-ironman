@@ -72,10 +72,12 @@ const validatePassword = (passwordValue: string): string[] => {
 export default function LoginPage({
   githubAvailable,
   googleAvailable,
+  nextcloudAvailable,
   isProduction,
 }: {
   githubAvailable: boolean
   googleAvailable: boolean
+  nextcloudAvailable: boolean
   isProduction: boolean
 }) {
   const router = useRouter()
@@ -330,7 +332,7 @@ export default function LoginPage({
 
   const ssoEnabled = isTruthy(getEnv('NEXT_PUBLIC_SSO_ENABLED'))
   const emailEnabled = !isFalsy(getEnv('NEXT_PUBLIC_EMAIL_PASSWORD_SIGNUP_ENABLED'))
-  const hasSocial = githubAvailable || googleAvailable
+  const hasSocial = githubAvailable || googleAvailable || nextcloudAvailable
   const hasOnlySSO = ssoEnabled && !emailEnabled && !hasSocial
   const showTopSSO = hasOnlySSO
   const showBottomSection = hasSocial || (ssoEnabled && !hasOnlySSO)
@@ -479,6 +481,7 @@ export default function LoginPage({
           <SocialLoginButtons
             googleAvailable={googleAvailable}
             githubAvailable={githubAvailable}
+            nextcloudAvailable={nextcloudAvailable}
             isProduction={isProduction}
             callbackURL={callbackUrl}
           >

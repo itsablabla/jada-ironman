@@ -9,12 +9,13 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function LoginPage() {
-  const { githubAvailable, googleAvailable, isProduction } = await getOAuthProviderStatus()
+  const { githubAvailable, googleAvailable, nextcloudAvailable, isProduction } = await getOAuthProviderStatus()
 
   return (
     <LoginForm
       githubAvailable={githubAvailable}
       googleAvailable={googleAvailable}
+      nextcloudAvailable={nextcloudAvailable}
       isProduction={isProduction}
     />
   )

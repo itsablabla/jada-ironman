@@ -72,10 +72,12 @@ const validateEmailField = (emailValue: string): string[] => {
 function SignupFormContent({
   githubAvailable,
   googleAvailable,
+  nextcloudAvailable,
   isProduction,
 }: {
   githubAvailable: boolean
   googleAvailable: boolean
+  nextcloudAvailable: boolean
   isProduction: boolean
 }) {
   const router = useRouter()
@@ -372,7 +374,7 @@ function SignupFormContent({
       {(() => {
         const ssoEnabled = isTruthy(getEnv('NEXT_PUBLIC_SSO_ENABLED'))
         const emailEnabled = !isFalsy(getEnv('NEXT_PUBLIC_EMAIL_PASSWORD_SIGNUP_ENABLED'))
-        const hasSocial = githubAvailable || googleAvailable
+        const hasSocial = githubAvailable || googleAvailable || nextcloudAvailable
         const hasOnlySSO = ssoEnabled && !emailEnabled && !hasSocial
         return hasOnlySSO
       })() && (
@@ -558,7 +560,7 @@ function SignupFormContent({
       {(() => {
         const ssoEnabled = isTruthy(getEnv('NEXT_PUBLIC_SSO_ENABLED'))
         const emailEnabled = !isFalsy(getEnv('NEXT_PUBLIC_EMAIL_PASSWORD_SIGNUP_ENABLED'))
-        const hasSocial = githubAvailable || googleAvailable
+        const hasSocial = githubAvailable || googleAvailable || nextcloudAvailable
         const hasOnlySSO = ssoEnabled && !emailEnabled && !hasSocial
         const showBottomSection = hasSocial || (ssoEnabled && !hasOnlySSO)
         const showDivider = (emailEnabled || hasOnlySSO) && showBottomSection
@@ -579,7 +581,7 @@ function SignupFormContent({
       {(() => {
         const ssoEnabled = isTruthy(getEnv('NEXT_PUBLIC_SSO_ENABLED'))
         const emailEnabled = !isFalsy(getEnv('NEXT_PUBLIC_EMAIL_PASSWORD_SIGNUP_ENABLED'))
-        const hasSocial = githubAvailable || googleAvailable
+        const hasSocial = githubAvailable || googleAvailable || nextcloudAvailable
         const hasOnlySSO = ssoEnabled && !emailEnabled && !hasSocial
         const showBottomSection = hasSocial || (ssoEnabled && !hasOnlySSO)
         return showBottomSection
@@ -592,6 +594,7 @@ function SignupFormContent({
           <SocialLoginButtons
             githubAvailable={githubAvailable}
             googleAvailable={googleAvailable}
+            nextcloudAvailable={nextcloudAvailable}
             callbackURL={redirectUrl || '/workspace'}
             isProduction={isProduction}
           >
@@ -639,10 +642,12 @@ function SignupFormContent({
 export default function SignupPage({
   githubAvailable,
   googleAvailable,
+  nextcloudAvailable,
   isProduction,
 }: {
   githubAvailable: boolean
   googleAvailable: boolean
+  nextcloudAvailable: boolean
   isProduction: boolean
 }) {
   return (
@@ -652,6 +657,7 @@ export default function SignupPage({
       <SignupFormContent
         githubAvailable={githubAvailable}
         googleAvailable={googleAvailable}
+        nextcloudAvailable={nextcloudAvailable}
         isProduction={isProduction}
       />
     </Suspense>

@@ -2679,6 +2679,60 @@ export const auth = betterAuth({
             }
           },
         },
+        // Nextcloud SSO provider
+        ...(env.NEXTCLOUD_CLIENT_ID && env.NEXTCLOUD_CLIENT_SECRET && env.NEXTCLOUD_URL
+          ? [
+              {
+                providerId: 'nextcloud',
+                clientId: env.NEXTCLOUD_CLIENT_ID as string,
+                clientSecret: env.NEXTCLOUD_CLIENT_SECRET as string,
+                authorizationUrl: `${env.NEXTCLOUD_URL}/index.php/apps/oauth2/authorize`,
+                tokenUrl: `${env.NEXTCLOUD_URL}/index.php/apps/oauth2/api/v1/token`,
+                scopes: [],
+                redirectURI: `${getBaseUrl()}/api/auth/oauth2/callback/nextcloud`,
+                getUserInfo: async (tokens: { accessToken?: string }) => {
+                  try {
+                    logger.info('Fetching Nextcloud user profile')
+                    const response = await fetch(
+                      `${env.NEXTCLOUD_URL}/ocs/v2.php/cloud/user?format=json`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${tokens.accessToken}`,
+                          'OCS-APIRequest': 'true',
+                        },
+                      }
+                    )
+
+                    if (!response.ok) {
+                      await response.text().catch(() => {})
+                      logger.error('Failed to fetch Nextcloud user info', {
+                        status: response.status,
+                        statusText: response.statusText,
+                      })
+                      throw new Error('Failed to fetch Nextcloud user info')
+                    }
+
+                    const data = await response.json()
+                    const profile = data.ocs?.data || data
+                    const now = new Date()
+
+                    return {
+                      id: `${profile.id}-${crypto.randomUUID()}`,
+                      name: profile.displayname || profile.id || 'Nextcloud User',
+                      email: profile.email || `${profile.id}@nextcloud.local`,
+                      image: profile.avatar ? `${env.NEXTCLOUD_URL}/avatar/${profile.id}/128` : undefined,
+                      emailVerified: true,
+                      createdAt: now,
+                      updatedAt: now,
+                    }
+                  } catch (error) {
+                    logger.error('Error in Nextcloud getUserInfo:', { error })
+                    throw error
+                  }
+                },
+              },
+            ]
+          : []),
       ],
     }),
     // Include SSO plugin when enabled
