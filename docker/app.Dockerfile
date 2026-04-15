@@ -31,7 +31,7 @@ RUN --mount=type=cache,id=bun-cache,target=/root/.bun/install/cache \
     --mount=type=cache,id=npm-cache,target=/root/.npm \
     bun install -g turbo && \
     HUSKY=0 bun install --omit=dev --ignore-scripts --linker=hoisted && \
-    cd node_modules/isolated-vm && npx node-gyp rebuild --release && mkdir -p out && cp build/Release/isolated_vm.node out/isolated_vm.node
+    cd node_modules/isolated-vm && npx node-gyp rebuild --release && mkdir -p out && cp -n build/Release/isolated_vm.node out/isolated_vm.node 2>/dev/null || true
 
 # ========================================
 # Builder Stage: Build the Application
